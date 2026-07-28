@@ -1,25 +1,27 @@
--- 2. Сравнение годового количества заказов с предыдущим периодом
+-- 2. РЎСЂР°РІРЅРµРЅРёРµ РіРѕРґРѕРІРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РєР°Р·РѕРІ СЃ РїСЂРµРґС‹РґСѓС‰РёРј РїРµСЂРёРѕРґРѕРј
+
+DECLARE @Year int = 2013;
 
 WITH OrdersByYear AS
 (
     SELECT
-        YEAR(OrderDate) AS [Год],
-        COUNT(*) AS [Количество заказов]
+        YEAR(OrderDate) AS [Р“РѕРґ],
+        COUNT(*) AS [РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ]
     FROM Sales.SalesOrderHeader
     GROUP BY YEAR(OrderDate)
 )
 
 SELECT
-    CurrentYear.[Год],
-    CurrentYear.[Количество заказов],
-    PreviousYear.[Количество заказов] AS [Заказы за предыдущий год],
-    CurrentYear.[Количество заказов] - PreviousYear.[Количество заказов] AS [Изменение количества заказов],
+    CurrentYear.[Р“РѕРґ],
+    CurrentYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ],
+    PreviousYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ] AS [Р—Р°РєР°Р·С‹ Р·Р° РїСЂРµРґС‹РґСѓС‰РёР№ РіРѕРґ],
+    CurrentYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ] - PreviousYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ] AS [РР·РјРµРЅРµРЅРёРµ РєРѕР»РёС‡РµСЃС‚РІР° Р·Р°РєР°Р·РѕРІ],
     CAST(
-        (CurrentYear.[Количество заказов] - PreviousYear.[Количество заказов]) * 100.0
-        / NULLIF(PreviousYear.[Количество заказов], 0)
+        (CurrentYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ] - PreviousYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ]) * 100.0
+        / NULLIF(PreviousYear.[РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РєР°Р·РѕРІ], 0)
         AS DECIMAL(10,2)
-    ) AS [Темп роста, %]
+    ) AS [РўРµРјРї СЂРѕСЃС‚Р°, %]
 FROM OrdersByYear AS CurrentYear
 LEFT JOIN OrdersByYear AS PreviousYear
-    ON CurrentYear.[Год] = PreviousYear.[Год] + 1
-WHERE CurrentYear.[Год] = 2013;
+    ON CurrentYear.[Р“РѕРґ] = PreviousYear.[Р“РѕРґ] + 1
+WHERE CurrentYear.[Р“РѕРґ] = @Year;
