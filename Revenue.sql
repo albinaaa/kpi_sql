@@ -1,3 +1,5 @@
+-- 1. Выручка за период
+
 DECLARE @DateFrom date = '2013-01-01';
 DECLARE @DateTo date = '2013-12-31';
 
