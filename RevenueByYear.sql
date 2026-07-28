@@ -1,25 +1,27 @@
+-- 1. РЎСЂР°РІРЅРµРЅРёРµ РіРѕРґРѕРІРѕР№ РІС‹СЂСѓС‡РєРё СЃ РїСЂРµРґС‹РґСѓС‰РёРј РїРµСЂРёРѕРґРѕРј
+
 DECLARE @Year int = 2013;
 
 WITH RevenueByYear AS
 (
     SELECT
-        YEAR(OrderDate) AS [Год],
-        SUM(TotalDue) AS [Выручка]
+        YEAR(OrderDate) AS [ГѓГ®Г¤],
+        SUM(TotalDue) AS [Г‚Г»Г°ГіГ·ГЄГ ]
     FROM Sales.SalesOrderHeader
     GROUP BY YEAR(OrderDate)
 )
 
 SELECT
-    CurrentYear.[Год],
-    CAST(CurrentYear.[Выручка] AS DECIMAL(18,2)) AS [Выручка],
-    CAST(PreviousYear.[Выручка] AS DECIMAL(18,2)) AS [Выручка за предыдущий год],
-    CAST(CurrentYear.[Выручка] - PreviousYear.[Выручка] AS DECIMAL(18,2)) AS [Изменение выручки],
+    CurrentYear.[ГѓГ®Г¤],
+    CAST(CurrentYear.[Г‚Г»Г°ГіГ·ГЄГ ] AS DECIMAL(18,2)) AS [Г‚Г»Г°ГіГ·ГЄГ ],
+    CAST(PreviousYear.[Г‚Г»Г°ГіГ·ГЄГ ] AS DECIMAL(18,2)) AS [Г‚Г»Г°ГіГ·ГЄГ  Г§Г  ГЇГ°ГҐГ¤Г»Г¤ГіГ№ГЁГ© ГЈГ®Г¤],
+    CAST(CurrentYear.[Г‚Г»Г°ГіГ·ГЄГ ] - PreviousYear.[Г‚Г»Г°ГіГ·ГЄГ ] AS DECIMAL(18,2)) AS [Г€Г§Г¬ГҐГ­ГҐГ­ГЁГҐ ГўГ»Г°ГіГ·ГЄГЁ],
     CAST(
-        (CurrentYear.[Выручка] - PreviousYear.[Выручка]) * 100.0
-        / NULLIF(PreviousYear.[Выручка], 0)
+        (CurrentYear.[Г‚Г»Г°ГіГ·ГЄГ ] - PreviousYear.[Г‚Г»Г°ГіГ·ГЄГ ]) * 100.0
+        / NULLIF(PreviousYear.[Г‚Г»Г°ГіГ·ГЄГ ], 0)
         AS DECIMAL(10,2)
-    ) AS [Темп роста, %]
+    ) AS [Г’ГҐГ¬ГЇ Г°Г®Г±ГІГ , %]
 FROM RevenueByYear AS CurrentYear
 LEFT JOIN RevenueByYear AS PreviousYear
-    ON CurrentYear.[Год] = PreviousYear.[Год] + 1
-WHERE CurrentYear.[Год] = @Year;
+    ON CurrentYear.[ГѓГ®Г¤] = PreviousYear.[ГѓГ®Г¤] + 1
+WHERE CurrentYear.[ГѓГ®Г¤] = @Year;
